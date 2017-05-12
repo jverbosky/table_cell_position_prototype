@@ -1,4 +1,32 @@
-// Get table cell position index on click
+// Function to perform POST request
+// Per: http://stackoverflow.com/questions/133925/javascript-post-request-like-a-form-submit
+
+function post(path, params, method) {
+    method = method || "post"; // Set method to post by default if not specified.
+
+    // The rest of this code assumes you are not using a library.
+    // It can be made less wordy if you use one.
+    var form = document.createElement("form");
+    form.setAttribute("method", method);
+    form.setAttribute("action", path);
+
+    for(var key in params) {
+        if(params.hasOwnProperty(key)) {
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", key);
+            hiddenField.setAttribute("value", params[key]);
+
+            form.appendChild(hiddenField);
+         }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
+// Get table cell position index on click and POST to Sinatra app
+// Based upon: http://stackoverflow.com/questions/4998953/get-cell-location
 
 var table = document.getElementById("table_id");
 var cells = table.getElementsByTagName("td");
@@ -12,10 +40,10 @@ for (var i = 0; i < cells.length; i++) {
 
     // Track with onclick
     cell.onclick = function () {
-        alert("I am position " + this.positionIndex + " (out of " + this.totalCells + " cells)");
+        // alert("I am position " + this.positionIndex + " (out of " + this.totalCells + " cells)");
+        post('/board_index', {board_index: this.positionIndex});
     };
 }
-
 
 //-----------------Research------------------------------------
 
